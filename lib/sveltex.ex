@@ -10,8 +10,19 @@ defmodule Sveltex do
   def render(name, props) do
     Phoenix.HTML.Tag.tag(:div,
       data: [props: payload(props)],
-      id: "sveltex-#{String.replace(name, " ", "-")}"
+      id: createId(name)
     )
+  end
+
+  def render(name, props, target_id: target_id) do
+    Phoenix.HTML.Tag.tag(:div,
+      data: [props: payload(props), target: [id: target_id]],
+      id: createId(name)
+    )
+  end
+
+  defp createId(name) do
+    "sveltex-#{String.replace(name, " ", "-")}"
   end
 
   defp payload(props) do

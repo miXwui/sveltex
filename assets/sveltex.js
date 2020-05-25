@@ -1,25 +1,26 @@
 const context = require.context("../../../assets/js/svelte", false, /\.svelte/);
-window.onload = function() {
+window.onload = function () {
   context.keys().forEach(file => {
     const componentName = file.replace(/\.\/|\.svelte/g, "");
-    const targetId = `sveltex-${componentName}`;
+    const svelteContainerId = `sveltex-${componentName}`;
 
-    const root = document.getElementById(targetId);
-
-    if (!root) {
+    const svelteContainer = document.getElementById(svelteContainerId);
+    if (!svelteContainer) {
       return;
+    }
+
+    const { props, targetId } = svelteContainer.dataset;
+    if (props) {
+      parsedProps = JSON.parse(props);
+    }
+    if (targetId) {
+      svelteContainer.remove();
     }
 
     const requiredApp = require(`../../../assets/js/svelte/${componentName}.svelte`);
 
-    const props = root.getAttribute("data-props");
-    let parsedProps = {};
-    if (props) {
-      parsedProps = JSON.parse(props);
-    }
-
     new requiredApp.default({
-      target: root,
+      target: targetId ? document.getElementById(targetId) : svelteContainer,
       props: parsedProps
     });
   });
